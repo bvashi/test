@@ -1,0 +1,61 @@
+---
+
+- name: "PLAY 1: Set theory based SSH/CLI infrastructure-as-code"
+  hosts: routers
+  gather_facts: no
+#  ansible_network_os: ios
+  connection: network_cli
+  become: yes
+
+  tasks:
+    - name: "TASK 1: Get router configuration"
+      ios_command:
+        commands: "show running-config"
+      register: running_config
+
+    - name: print config
+      debug:
+        var: running_config
+
+    - name: copy running config
+      copy: content="{{running_config}}"  dest=/home/bhavesh/project/backup/r1.txt
+
+
+    - name: Task 1 assin ip address
+      ios_l3_interface:
+                  name: GigabitEthernet3
+                  ipv4: 192.168.0.1/24 
+ 
+ 
+    - name:  configure interface
+      ios_config:     
+ 
+         lines:
+             
+             - Description test
+             - ip address 172.31.1.1 255.255.255.0
+
+         parents: interface gigabitEthernet3
+
+
+    - name: show the changes
+       
+      ios_command:
+         commands: "show ip interface brief"
+
+      register: showip
+
+    - name: show ip brief
+      debug:
+        var: "{{showip| to_json}}" 
+
+
+
+    - name: backup
+      ios_config:
+          backup: yes
+
+
+
+
+
