@@ -33,7 +33,7 @@
          lines:
              
              - Description test
-             - ip address 172.31.1.100 255.255.255.0
+             - ip address 172.31.1.89 255.255.255.0
 
          parents: interface gigabitEthernet3
 
